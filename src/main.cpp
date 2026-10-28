@@ -59,10 +59,10 @@ Color stocl(const std::string &str) {
 }
 
 // Errors
-int noArgs() {
+int noArgsErr() {
     std::cout << bg[Color::Red] << fg[Color::White] << "ERROR"
               << bg[Color::Default] << fg[Color::Default]
-              << " You must pass a string!\n";
+              << " You must provide at least one argument!\n";
 
     return 1;
 }
@@ -73,7 +73,7 @@ int lastFlagErr() {
 
     return 1;
 }
-int unknownColor(const std::string &color) {
+int unknownColorErr(const std::string &color) {
     std::cout << bg[Color::Red] << fg[Color::White] << "ERROR"
               << bg[Color::Default] << fg[Color::Default]
               << " Can't find color \'" << color << "\'!\n";
@@ -83,7 +83,7 @@ int unknownColor(const std::string &color) {
 
 int main(int argc, char *argv[]) {
     if(argc == 1) {
-        return noArgs();
+        return noArgsErr();
     } else {
         int nArgs = argc - 1;
         std::vector<std::string> args;
@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
                 if(idx == nArgs - 1) {
                     return lastFlagErr();
                 } else if(!fg.contains(stocl(args[idx + 1]))) {
-                    return unknownColor(args[idx + 1]);
+                    return unknownColorErr(args[idx + 1]);
                 } else {
                     fgColor = fg[stocl(args[idx + 1])];
                     idx += 2;
@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
                 if(idx == nArgs - 1) {
                     return lastFlagErr();
                 } else if(!bg.contains(stocl(args[idx + 1]))) {
-                    return unknownColor(args[idx + 1]);
+                    return unknownColorErr(args[idx + 1]);
                 } else {
                     bgColor = bg[stocl(args[idx + 1])];
                     idx += 2;
