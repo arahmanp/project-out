@@ -4,35 +4,63 @@
 #include <unordered_map>
 #include <vector>
 
+// Available Colors
+enum class Color {
+    Black,
+    Red,
+    Green,
+    Yellow,
+    Blue,
+    Magenta,
+    Cyan,
+    White,
+    Default,
+    Unknown,
+};
+
 // Foreground Colors
-std::unordered_map<std::string, std::string> fg = {
-    {"black",    "\033[30m"},
-    {"red",      "\033[31m"},
-    {"green",    "\033[32m"},
-    {"yellow",   "\033[33m"},
-    {"blue",     "\033[34m"},
-    {"magenta",  "\033[35m"},
-    {"cyan",     "\033[36m"},
-    {"white",    "\033[37m"},
-    {"default",  "\033[39m"},
+std::unordered_map<Color, std::string> fg = {
+    {Color::Black,    "\033[30m"},
+    {Color::Red,      "\033[31m"},
+    {Color::Green,    "\033[32m"},
+    {Color::Yellow,   "\033[33m"},
+    {Color::Blue,     "\033[34m"},
+    {Color::Magenta,  "\033[35m"},
+    {Color::Cyan,     "\033[36m"},
+    {Color::White,    "\033[37m"},
+    {Color::Default,  "\033[39m"},
 };
 
 // Background Colors
-std::unordered_map<std::string, std::string> bg = {
-    {"black",    "\033[40m"},
-    {"red",      "\033[41m"},
-    {"green",    "\033[42m"},
-    {"yellow",   "\033[43m"},
-    {"blue",     "\033[44m"},
-    {"magenta",  "\033[45m"},
-    {"cyan",     "\033[46m"},
-    {"white",    "\033[47m"},
-    {"default",  "\033[49m"},
+std::unordered_map<Color, std::string> bg = {
+    {Color::Black,    "\033[40m"},
+    {Color::Red,      "\033[41m"},
+    {Color::Green,    "\033[42m"},
+    {Color::Yellow,   "\033[43m"},
+    {Color::Blue,     "\033[44m"},
+    {Color::Magenta,  "\033[45m"},
+    {Color::Cyan,     "\033[46m"},
+    {Color::White,    "\033[47m"},
+    {Color::Default,  "\033[49m"},
 };
+
+// Mapping string-to-enum for color
+Color stocl(const std::string &str) {
+    if(str == "black") return Color::Black;
+    if(str == "red") return Color::Red;
+    if(str == "green") return Color::Green;
+    if(str == "yellow") return Color::Yellow;
+    if(str == "blue") return Color::Blue;
+    if(str == "magenta") return Color::Magenta;
+    if(str == "cyan") return Color::Cyan;
+    if(str == "white") return Color::White;
+
+    return Color::Unknown;
+}
 
 int main(int argc, char *argv[]) {
     if(argc == 1) {
-        std::cout << fg["red"] << "error: " << fg["default"]
+        std::cout << fg[Color::Red] << "error: " << fg[Color::Default]
                   << "You must pass a string!\n";
     } else {
         int nArgs = argc - 1;
@@ -44,46 +72,46 @@ int main(int argc, char *argv[]) {
             args.push_back(argv[i]);
         }
 
-        std::string fgColor = fg["default"];
-        std::string bgColor = bg["default"];
+        std::string fgColor = fg[Color::Default];
+        std::string bgColor = bg[Color::Default];
         std::string str;
 
         int idx = 0;
         while(idx < nArgs) {
             if(args[idx] == "--fg-color") {
                 if(idx == nArgs - 1) {
-                    std::cout << bg["red"] << fg["white"] << "ERR"
-                              << bg["default"] << fg["default"];
+                    std::cout << bg[Color::Red] << fg[Color::White] << "ERR"
+                              << bg[Color::Default] << fg[Color::Default];
                     std::cout << " Can't find the color!\n";
 
                     exit(1);
-                } else if(!fg.contains(args[idx + 1])) {
-                    std::cout << bg["red"] << fg["white"] << "ERR"
-                              << bg["default"] << fg["default"];
+                } else if(!fg.contains(stocl(args[idx + 1]))) {
+                    std::cout << bg[Color::Red] << fg[Color::White] << "ERR"
+                              << bg[Color::Default] << fg[Color::Default];
                     std::cout << " Can't find color \'" << args[idx + 1]
                               << "\'!\n";
 
                     exit(1);
                 } else {
-                    fgColor = fg[args[idx + 1]];
+                    fgColor = fg[stocl(args[idx + 1])];
                     idx += 2;
                 }
             } else if(args[idx] == "--bg-color") {
                 if(idx == nArgs - 1) {
-                    std::cout << bg["red"] << fg["white"] << "ERR"
-                              << bg["default"] << fg["default"];
+                    std::cout << bg[Color::Red] << fg[Color::White] << "ERR"
+                              << bg[Color::Default] << fg[Color::Default];
                     std::cout << " Can't find the color!\n";
 
                     exit(1);
-                } else if(!bg.contains(args[idx + 1])) {
-                    std::cout << bg["red"] << fg["white"] << "ERR"
-                              << bg["default"] << fg["default"];
+                } else if(!bg.contains(stocl(args[idx + 1]))) {
+                    std::cout << bg[Color::Red] << fg[Color::White] << "ERR"
+                              << bg[Color::Default] << fg[Color::Default];
                     std::cout << " Can't find color \'" << args[idx + 1]
                               << "\'!\n";
 
                     exit(1);
                 } else {
-                    bgColor = bg[args[idx + 1]];
+                    bgColor = bg[stocl(args[idx + 1])];
                     idx += 2;
                 }
             } else {
@@ -93,6 +121,6 @@ int main(int argc, char *argv[]) {
         }
 
         std::cout << fgColor << bgColor << str << '\n';
-        std::cout << fg["default"] << bg["default"];
+        std::cout << fg[Color::Default] << bg[Color::Default];
     }
 }
