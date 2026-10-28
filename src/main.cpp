@@ -58,10 +58,32 @@ Color stocl(const std::string &str) {
     return Color::Unknown;
 }
 
+// Errors
+int noArgs() {
+    std::cout << bg[Color::Red] << fg[Color::White] << "ERROR"
+              << bg[Color::Default] << fg[Color::Default]
+              << " You must pass a string!\n";
+
+    return 1;
+}
+int lastFlagErr() {
+    std::cout << bg[Color::Red] << fg[Color::White] << "ERROR"
+              << bg[Color::Default] << fg[Color::Default]
+              << " Flags that require arguments must not be placed at the end!\n";
+
+    return 1;
+}
+int unknownColor(const std::string &color) {
+    std::cout << bg[Color::Red] << fg[Color::White] << "ERROR"
+              << bg[Color::Default] << fg[Color::Default]
+              << " Can't find color \'" << color << "\'!\n";
+
+    return 1;
+}
+
 int main(int argc, char *argv[]) {
     if(argc == 1) {
-        std::cout << fg[Color::Red] << "error: " << fg[Color::Default]
-                  << "You must pass a string!\n";
+        return noArgs();
     } else {
         int nArgs = argc - 1;
         std::vector<std::string> args;
@@ -80,36 +102,18 @@ int main(int argc, char *argv[]) {
         while(idx < nArgs) {
             if(args[idx] == "--fg-color") {
                 if(idx == nArgs - 1) {
-                    std::cout << bg[Color::Red] << fg[Color::White] << "ERR"
-                              << bg[Color::Default] << fg[Color::Default];
-                    std::cout << " Can't find the color!\n";
-
-                    exit(1);
+                    return lastFlagErr();
                 } else if(!fg.contains(stocl(args[idx + 1]))) {
-                    std::cout << bg[Color::Red] << fg[Color::White] << "ERR"
-                              << bg[Color::Default] << fg[Color::Default];
-                    std::cout << " Can't find color \'" << args[idx + 1]
-                              << "\'!\n";
-
-                    exit(1);
+                    return unknownColor(args[idx + 1]);
                 } else {
                     fgColor = fg[stocl(args[idx + 1])];
                     idx += 2;
                 }
             } else if(args[idx] == "--bg-color") {
                 if(idx == nArgs - 1) {
-                    std::cout << bg[Color::Red] << fg[Color::White] << "ERR"
-                              << bg[Color::Default] << fg[Color::Default];
-                    std::cout << " Can't find the color!\n";
-
-                    exit(1);
+                    return lastFlagErr();
                 } else if(!bg.contains(stocl(args[idx + 1]))) {
-                    std::cout << bg[Color::Red] << fg[Color::White] << "ERR"
-                              << bg[Color::Default] << fg[Color::Default];
-                    std::cout << " Can't find color \'" << args[idx + 1]
-                              << "\'!\n";
-
-                    exit(1);
+                    return unknownColor(args[idx + 1]);
                 } else {
                     bgColor = bg[stocl(args[idx + 1])];
                     idx += 2;
