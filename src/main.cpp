@@ -88,6 +88,21 @@ int emptyStrErr() {
     return 1;
 }
 
+// Warnings
+void onlyWhitespacesStrWarn() {
+    std::cout << bg[Color::Yellow] << fg[Color::Black] << "WARNING"
+              << bg[Color::Default] << fg[Color::Default]
+              << " You have entered a string that contains only whitespace, while also setting the --fg-color flag.\n";
+}
+
+// Helpers
+bool isOnlyContainsWhitespaces(const std::string &str) {
+    for(auto c : str) {
+        if(c != ' ') return false;
+    }
+    return true;
+}
+
 int main(int argc, char *argv[]) {
     if(argc == 1) {
         return noArgsErr();
@@ -132,6 +147,8 @@ int main(int argc, char *argv[]) {
         }
 
         if(str.empty()) return emptyStrErr();
+
+        if(isOnlyContainsWhitespaces(str) && fgColor != fg[Color::Default]) onlyWhitespacesStrWarn();
 
         std::cout << fgColor << bgColor << str << '\n';
         std::cout << fg[Color::Default] << bg[Color::Default];
