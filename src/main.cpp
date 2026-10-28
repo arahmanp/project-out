@@ -80,6 +80,13 @@ int unknownColorErr(const std::string &color) {
 
     return 1;
 }
+int emptyStrErr() {
+    std::cout << bg[Color::Red] << fg[Color::White] << "ERROR"
+              << bg[Color::Default] << fg[Color::Default]
+              << " You must provide a non-empty string!\n";
+
+    return 1;
+}
 
 int main(int argc, char *argv[]) {
     if(argc == 1) {
@@ -96,7 +103,7 @@ int main(int argc, char *argv[]) {
 
         std::string fgColor = fg[Color::Default];
         std::string bgColor = bg[Color::Default];
-        std::string str;
+        std::string str = "";
 
         int idx = 0;
         while(idx < nArgs) {
@@ -123,6 +130,8 @@ int main(int argc, char *argv[]) {
                 idx++;
             }
         }
+
+        if(str.empty()) return emptyStrErr();
 
         std::cout << fgColor << bgColor << str << '\n';
         std::cout << fg[Color::Default] << bg[Color::Default];
