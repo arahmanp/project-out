@@ -8,6 +8,9 @@
 TODO: create parser for each flags and the string to simplify main() code
 TODO: create handler for double flag set (two same flag provided at the same time)
 TODO: create handler for double string set (two string provided at the same time)
+TODO: create flag --string for second handler the string (exp. out --fg-color blue --string 'andhika', but not using it is ok)
+
+* if string is a flag, user should use flag --string, if not, --string is optional
 */
 
 // Available Colors
