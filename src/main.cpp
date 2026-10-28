@@ -4,6 +4,12 @@
 #include <unordered_map>
 #include <vector>
 
+/*
+TODO: create parser for each flags and the string to simplify main() code
+TODO: create handler for double flag set (two same flag provided at the same time)
+TODO: create handler for double string set (two string provided at the same time)
+*/
+
 // Available Colors
 enum class Color {
     Black,
