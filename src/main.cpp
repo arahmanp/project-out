@@ -121,6 +121,52 @@ bool isOnlyContainsWhitespaces(const std::string &str) {
     return true;
 }
 
+// Parser
+void parseFgColor(const std::vector<std::string> &args, Config &conf, int &idx) {
+    int n = args.size();
+
+    if(idx == n - 1) {
+        lastFlagErr();
+        exit(1);
+    } else if(!fg.contains(stocl(args[idx + 1]))) {
+        unknownColorErr(args[idx + 1]);
+        exit(1);
+    } else {
+        conf.fgColor = fg[stocl(args[idx + 1])];
+        idx += 2;
+    }
+}
+void parseBgColor(const std::vector<std::string> &args, Config &conf, int &idx) {
+    int n = args.size();
+
+    if(idx == n - 1) {
+        lastFlagErr();
+        exit(1);
+    } else if(!bg.contains(stocl(args[idx + 1]))) {
+        unknownColorErr(args[idx + 1]);
+        exit(1);
+    } else {
+        conf.bgColor = bg[stocl(args[idx + 1])];
+        idx += 2;
+    }
+}
+void parseStr(const std::vector<std::string> &args, Config &conf, int &idx) {
+    int n = args.size();
+
+    if(args[idx] == "--string") {
+        if(idx == n - 1) {
+            lastFlagErr();
+            exit(1);
+        } else {
+            conf.str = args[idx + 1];
+            idx += 2;
+        }
+    } else {
+        conf.str = args[idx];
+        idx++;
+    }
+}
+
 int main(int argc, char *argv[]) {
     if(argc == 1) {
         return noArgsErr();
@@ -139,26 +185,13 @@ int main(int argc, char *argv[]) {
         int idx = 0;
         while(idx < nArgs) {
             if(args[idx] == "--fg-color") {
-                if(idx == nArgs - 1) {
-                    return lastFlagErr();
-                } else if(!fg.contains(stocl(args[idx + 1]))) {
-                    return unknownColorErr(args[idx + 1]);
-                } else {
-                    conf.fgColor = fg[stocl(args[idx + 1])];
-                    idx += 2;
-                }
+                parseFgColor(args, conf, idx);
             } else if(args[idx] == "--bg-color") {
-                if(idx == nArgs - 1) {
-                    return lastFlagErr();
-                } else if(!bg.contains(stocl(args[idx + 1]))) {
-                    return unknownColorErr(args[idx + 1]);
-                } else {
-                    conf.bgColor = bg[stocl(args[idx + 1])];
-                    idx += 2;
-                }
+                parseBgColor(args, conf, idx);
+            } else if(args[idx] == "--string") {
+                parseStr(args, conf, idx);
             } else {
-                conf.str = args[idx];
-                idx++;
+                parseStr(args, conf, idx);
             }
         }
 
