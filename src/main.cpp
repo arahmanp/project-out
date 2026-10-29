@@ -10,7 +10,7 @@ TODO: create handler for double flag set (two same flag provided at the same tim
 TODO: create handler for double string set (two string provided at the same time)
 TODO: create flag --string for second handler the string (exp. out --fg-color blue --string 'andhika', but not using it is ok)
 TODO: create flag --version and --help
-TODO: create struct Config to store all output configuration in one place
+// TODO: create struct Config to store all output configuration in one place
 
 * if string is a flag, user should use flag --string, if not, --string is optional
 */
