@@ -6,8 +6,8 @@
 
 /*
 // TODO: create parser for each flags and the string to simplify main() code
-TODO: create handler for double flag set (two same flag provided at the same time)
-TODO: create handler for double string set (two string provided at the same time)
+// TODO: create handler for double flag set (two same flag provided at the same time)
+// TODO: create handler for double string set (two string provided at the same time)
 TODO: create flag --string for second handler the string (exp. out --fg-color blue --string 'andhika', but not using it is ok)
 TODO: create flag --version and --help
 // TODO: create struct Config to store all output configuration in one place
@@ -105,6 +105,20 @@ int emptyStrErr() {
 
     return 1;
 }
+int doubleFlagsErr(const std::string &flag) {
+    std::cout << bg[Color::Red] << fg[Color::White] << "ERROR"
+              << bg[Color::Default] << fg[Color::Default]
+              << " You have entered the same flag twice!\n";
+
+    return 1;
+}
+int doubleStrErr() {
+    std::cout << bg[Color::Red] << fg[Color::White] << "ERROR"
+              << bg[Color::Default] << fg[Color::Default]
+              << " You can only enter one non-empty string!\n";
+
+    return 1;
+}
 
 // Warnings
 void onlyWhitespacesStrWarn() {
@@ -131,6 +145,9 @@ void parseFgColor(const std::vector<std::string> &args, Config &conf, int &idx) 
     } else if(!fg.contains(stocl(args[idx + 1]))) {
         unknownColorErr(args[idx + 1]);
         exit(1);
+    } else if(conf.fgColor != fg[Color::Default]) {
+        doubleFlagsErr(args[idx]);
+        exit(1);
     } else {
         conf.fgColor = fg[stocl(args[idx + 1])];
         idx += 2;
@@ -145,6 +162,9 @@ void parseBgColor(const std::vector<std::string> &args, Config &conf, int &idx) 
     } else if(!bg.contains(stocl(args[idx + 1]))) {
         unknownColorErr(args[idx + 1]);
         exit(1);
+    } else if(conf.bgColor != bg[Color::Default]) {
+        doubleFlagsErr(args[idx]);
+        exit(1);
     } else {
         conf.bgColor = bg[stocl(args[idx + 1])];
         idx += 2;
@@ -152,6 +172,11 @@ void parseBgColor(const std::vector<std::string> &args, Config &conf, int &idx) 
 }
 void parseStr(const std::vector<std::string> &args, Config &conf, int &idx) {
     int n = args.size();
+
+    if(!conf.str.empty()) {
+        doubleStrErr();
+        exit(1);
+    }
 
     if(args[idx] == "--string") {
         if(idx == n - 1) {
