@@ -69,6 +69,13 @@ Color stocl(const std::string &str) {
     return Color::Unknown;
 }
 
+// Configuration struct
+struct Config {
+    std::string fgColor = fg[Color::Default];
+    std::string bgColor = bg[Color::Default];
+    std::string str = "";
+};
+
 // Errors
 int noArgsErr() {
     std::cout << bg[Color::Red] << fg[Color::White] << "ERROR"
@@ -127,9 +134,7 @@ int main(int argc, char *argv[]) {
             args.push_back(argv[i]);
         }
 
-        std::string fgColor = fg[Color::Default];
-        std::string bgColor = bg[Color::Default];
-        std::string str = "";
+        Config conf;
 
         int idx = 0;
         while(idx < nArgs) {
@@ -139,7 +144,7 @@ int main(int argc, char *argv[]) {
                 } else if(!fg.contains(stocl(args[idx + 1]))) {
                     return unknownColorErr(args[idx + 1]);
                 } else {
-                    fgColor = fg[stocl(args[idx + 1])];
+                    conf.fgColor = fg[stocl(args[idx + 1])];
                     idx += 2;
                 }
             } else if(args[idx] == "--bg-color") {
@@ -148,20 +153,20 @@ int main(int argc, char *argv[]) {
                 } else if(!bg.contains(stocl(args[idx + 1]))) {
                     return unknownColorErr(args[idx + 1]);
                 } else {
-                    bgColor = bg[stocl(args[idx + 1])];
+                    conf.bgColor = bg[stocl(args[idx + 1])];
                     idx += 2;
                 }
             } else {
-                str = args[idx];
+                conf.str = args[idx];
                 idx++;
             }
         }
 
-        if(str.empty()) return emptyStrErr();
+        if(conf.str.empty()) return emptyStrErr();
 
-        if(isOnlyContainsWhitespaces(str) && fgColor != fg[Color::Default]) onlyWhitespacesStrWarn();
+        if(isOnlyContainsWhitespaces(conf.str) && conf.fgColor != fg[Color::Default]) onlyWhitespacesStrWarn();
 
-        std::cout << fgColor << bgColor << str << '\n';
+        std::cout << conf.fgColor << conf.bgColor << conf.str << '\n';
         std::cout << fg[Color::Default] << bg[Color::Default];
     }
 }
